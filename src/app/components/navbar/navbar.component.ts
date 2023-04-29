@@ -37,22 +37,24 @@ export class NavbarComponent implements OnInit {
                 this.mobile_menu_visible = 0;
             }
         });
-
+        this.checkBasket();
         this.commonService.loginSubscription.subscribe((res) => {
+            this.checkBasket();
+        });
+    }
 
-
-            if (this.ch.isLoggedIn()) {
+    checkBasket() {
+        if (this.ch.isLoggedIn()) {
+            this.totalPrice = 0;
+            this.getAllBasketItem();
+            this.commonService.basketItemSubscription.subscribe((res) => {
                 this.totalPrice = 0;
-                this.getAllBasketItem();
-                this.commonService.basketItemSubscription.subscribe((res) => {
-                    this.totalPrice = 0;
-                    this.baskets = res;
-                    this.baskets.forEach(element => {
-                        this.totalPrice += element.productPrice;
-                    });
-                })
-            }
-        })
+                this.baskets = res;
+                this.baskets.forEach(element => {
+                    this.totalPrice += element.productPrice;
+                });
+            })
+        }
     }
 
     getAllBasketItem() {
@@ -157,18 +159,7 @@ export class NavbarComponent implements OnInit {
                 return this.listTitles[item].title;
             }
         }
-
-        if(titlee == "/product-list"){
-            return 'Ürünler';
-        }
-
-        else if(titlee == "/category-list"){
-            return 'Kategoriler';
-        }
-        else{
-            return 'Anasayfa';
-        }
-        
+        return 'Anasayfa';
     }
 
 
